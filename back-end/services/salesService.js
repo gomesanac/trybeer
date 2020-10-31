@@ -41,12 +41,16 @@ const registerSale = async (
 
 const salesDetailsById = async (saleId) => {
   try {
-    const sales = await Sales.findByPk(
-      saleId,
-      {
-        include: [{ model: Products, as: 'products', attributes: {
-          exclude: ['urlImage'],
-        } }],
+    const sales = await Sales.findAll(
+      { 
+        where: { id: saleId },
+        include: [
+        { 
+          model: Products, 
+          as: 'products',
+          through: { attributes: [] },
+       },
+      ],
         raw: true,
       }
     );
