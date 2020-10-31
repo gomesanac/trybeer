@@ -25,39 +25,55 @@ function ClientOrderDetail({ match }) {
 
   console.log(order);
 
+  /*
+
+            deliveryAddress: "Jarangari"
+            deliveryNumber: "53"
+            id: 1
+            products.id: 2
+            products.name: "Heineken 600ml"
+            products.price: 7.5
+            products.urlImage: "http://localhost:3001/images/Heineken 600ml.jpg"
+            saleDate: "2020-10-31T22:33:30.000Z"
+            status: "Pendente"
+            totalPrice: 16.97
+            userId: 2
+
+  */
+
   return (
     <div>
       <MenuTop pageTitle="Detalhes de Pedido" />
       <Sidebar />
       <div id="wrapper" className="order-details-page container">
-        {order && order.products ? (
+        {order ? (
           <div className="card">
             <div className="card-header">
               <h3
                 className="card-text"
                 data-testid="order-number"
-              >{`Pedido ${order.id}`}</h3>
+              >{`Pedido ${order && order[0].id}`}</h3>
               <p className="card-text" data-testid="order-date">
-                {formatDate(order.saleDate)}
+                {formatDate(order && order[0].saleDate)}
               </p>
             </div>
             <ul className="list-group list-group-flush">
-              {order.products && order.products.map(
+              {order && order.map(
                 (
-                  { soldProductID, soldQuantity, productName, productPrice },
+                  el,
                   index
                 ) => (
-                  <li className="list-group-item" key={soldProductID}>
+                  <li className="list-group-item" key={el["products.id"]}>
                     <div>
                       <h4 data-testid={`${index}-product-name`}>
-                        {productName}
+                        {el["products.name"]}
                       </h4>
                       <p
                         data-testid={`${index}-product-qtd`}
-                      >{`Quantidade: ${soldQuantity}`}</p>
+                      >{`Quantidade: ${0}`}</p>
                       <p data-testid={`${index}-product-total-value`}>
                         {`Total do produto: R$ ${formatPrice(
-                          productPrice * soldQuantity
+                          el["products.price"] * 1
                         )}`}
                       </p>
                     </div>
@@ -67,7 +83,7 @@ function ClientOrderDetail({ match }) {
             </ul>
             <div className="card-footer">
               <h3 className="card-text" data-testid="order-total-value">
-                {`Total: R$ ${order.orderValue ? formatPrice(order.orderValue): '0,00'}`}
+                {`Total: R$ ${order ? formatPrice(order[0].totalPrice): '0,00'}`}
               </h3>
             </div>
           </div>
