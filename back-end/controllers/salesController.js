@@ -19,14 +19,10 @@ const registerSale = rescue(async (req, res) => {
 });
 
 const getOneOrder = rescue(async (req, res) => {
-  try {
-    const { id } = req.params;
-    const salesData = await salesService.salesDetailsById(id);
+  const { id } = req.params;
+  const salesData = await salesService.salesDetailsById(id);
 
-    return res.status(200).json({ sale: salesData });
-  } catch (error) {
-    return res.json({ error: error.message });
-  }
+  return res.status(200).json({ sale: salesData });
 });
 
 const getAllOrders = rescue(async (_req, res) => {
