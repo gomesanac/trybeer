@@ -23,6 +23,8 @@ function ClientOrderDetail({ match }) {
 
   if (!user) return <Redirect to="/login" />;
 
+  console.log(order);
+
   return (
     <div>
       <MenuTop pageTitle="Detalhes de Pedido" />
@@ -34,7 +36,7 @@ function ClientOrderDetail({ match }) {
               <h3
                 className="card-text"
                 data-testid="order-number"
-              >{`Pedido ${order.saleID}`}</h3>
+              >{`Pedido ${order.id}`}</h3>
               <p className="card-text" data-testid="order-date">
                 {formatDate(order.saleDate)}
               </p>

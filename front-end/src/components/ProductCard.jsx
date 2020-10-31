@@ -4,7 +4,7 @@ import formatPrice from '../utils/formatPrice';
 import { saveToLocalStorage, getCartFromLocalStorage } from '../utils/saveToLocalStorage';
 
 function ProductCard({ product, index, getTotalPrice }) {
-  const { name, image, price } = product;
+  const { name, urlImage, price } = product;
   const [amount, setAmount] = useState(0);
 
   const existsInCart = () => {
@@ -62,7 +62,7 @@ function ProductCard({ product, index, getTotalPrice }) {
       <img
         className="card-img-top img-card"
         data-testid={`${index}-product-img`}
-        src={image}
+        src={urlImage}
         alt={name}
       />
       <div className="card-body">
@@ -105,7 +105,7 @@ export default ProductCard;
 ProductCard.propTypes = {
   product: PropTypes.shape({
     name: PropTypes.string,
-    image: PropTypes.string,
+    urlImage: PropTypes.string,
     price: PropTypes.number,
     id: PropTypes.number,
   }).isRequired,

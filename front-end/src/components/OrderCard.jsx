@@ -4,9 +4,9 @@ import formatDate from '../utils/formatDate';
 import formatPrice from '../utils/formatPrice';
 
 function OrderCard({ order, index }) {
-  const { orderNumber, totalPrice, saleDate } = order;
+  const { id, totalPrice, saleDate } = order;
 
-  const onCardClick = () => window.location.href = `/orders/${orderNumber}`;
+  const onCardClick = () => window.location.href = `/orders/${id}`;
 
   return (
     <div
@@ -17,7 +17,7 @@ function OrderCard({ order, index }) {
         <h5
           className="card-title"
           data-testid={`${index}-order-number`}
-        >{`Pedido ${orderNumber}`}</h5>
+        >{`Pedido ${id}`}</h5>
         <h6 className="card-text" data-testid={`${index}-order-date`}>
           {formatDate(saleDate)}
         </h6>
@@ -34,9 +34,9 @@ export default OrderCard;
 
 OrderCard.propTypes = {
   order: PropTypes.shape({
-    orderNumber: PropTypes.number,
+    id: PropTypes.number,
     totalPrice: PropTypes.number,
-    saleDate: PropTypes.number,
+    saleDate: PropTypes.string,
   }).isRequired,
   index: PropTypes.number,
 };

@@ -22,7 +22,7 @@ function ClientOrdersPage() {
   }, []);
 
   if (!user) return <Redirect to="/login" />;
-
+  
   return (
     <div>
       <MenuTop pageTitle="Meus Pedidos" />
