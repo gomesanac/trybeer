@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import formatPrice from '../utils/formatPrice';
-import { saveToLocalStorage, getCartFromLocalStorage } from '../utils/saveToLocalStorage';
+import { saveToLocalStorage, getCartFromLocalStorage } from '../utils/localStorageFunctions';
 
 function ProductCard({ product, index, getTotalPrice }) {
   const { name, urlImage, price } = product;
@@ -12,17 +12,21 @@ function ProductCard({ product, index, getTotalPrice }) {
 
     if (!cart || cart.length === 0) return null;
 
-    cart.forEach(({ id, amount: qnt }) =>
+    cart.forEach(({ id, amount: qnt }) => (
       id === product.id ? setAmount(qnt) : null
-    );
+    ));
   };
 
   const updateProductAmount = (e) => {
     const value = e.target.innerText;
 
-    if (value === '+') return setAmount((state) => state + 1);
-    else if (value === '-' && amount > 0)
+    if (value === '+') {
+      return setAmount((state) => state + 1);
+    }
+
+    if (value === '-' && amount > 0) {
       return setAmount((state) => state - 1);
+    }
 
     return null;
   };
@@ -58,40 +62,42 @@ function ProductCard({ product, index, getTotalPrice }) {
   }, [amount]);
 
   return (
-    <div className="card product-card" style={{background: "#FCE694", border: "none"}}>
+    <div className="card product-card" style={ { background: '#FCE694', border: 'none' } }>
       <img
         className="card-img-top img-card"
-        data-testid={`${index}-product-img`}
-        src={urlImage}
-        alt={name}
+        data-testid={ `${index}-product-img` }
+        src={ urlImage }
+        alt={ name }
       />
       <div className="card-body">
-        <h5 className="card-title" data-testid={`${index}-product-name`}>
+        <h5 className="card-title" data-testid={ `${index}-product-name` }>
           {name}
         </h5>
         <p
           className="card-text"
-          data-testid={`${index}-product-price`}
-        >{`R$ ${formatPrice(price)}`}</p>
+          data-testid={ `${index}-product-price` }
+        >
+          { `R$ ${formatPrice(price)}` }
+        </p>
         <button
           className="btn btn-custom"
-          data-testid={`${index}-product-plus`}
+          data-testid={ `${index}-product-plus` }
           type="button"
-          onClick={(event) => updateProductAmount(event)}
+          onClick={ (event) => updateProductAmount(event) }
         >
           +
         </button>
         <span
           className="card-text product-qtd"
-          data-testid={`${index}-product-qtd`}
+          data-testid={ `${index}-product-qtd` }
         >
           {amount}
         </span>
         <button
           className="btn btn-custom"
-          data-testid={`${index}-product-minus`}
+          data-testid={ `${index}-product-minus` }
           type="button"
-          onClick={(event) => updateProductAmount(event)}
+          onClick={ (event) => updateProductAmount(event) }
         >
           -
         </button>
@@ -109,6 +115,6 @@ ProductCard.propTypes = {
     price: PropTypes.number,
     id: PropTypes.number,
   }).isRequired,
-  index: PropTypes.number,
+  index: PropTypes.number.isRequired,
   getTotalPrice: PropTypes.func.isRequired,
 };

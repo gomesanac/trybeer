@@ -6,25 +6,31 @@ import formatPrice from '../utils/formatPrice';
 function OrderCard({ order, index }) {
   const { id, totalPrice, saleDate } = order;
 
-  const onCardClick = () => window.location.href = `/orders/${id}`;
+  const onCardClick = () => {
+    window.location.href = `/orders/${id}`;
+  };
 
   return (
     <div
       className="card product-card"
-      data-testid={`${index}-order-card-container`}
+      data-testid={ `${index}-order-card-container` }
     >
-      <div className="card-body" onClick={() => onCardClick()}>
+      <div className="card-body" onClick={ () => onCardClick() }>
         <h5
           className="card-title"
-          data-testid={`${index}-order-number`}
-        >{`Pedido ${id}`}</h5>
-        <h6 className="card-text" data-testid={`${index}-order-date`}>
+          data-testid={ `${index}-order-number` }
+        >
+          {`Pedido ${id}`}
+        </h5>
+        <h6 className="card-text" data-testid={ `${index}-order-date` }>
           {formatDate(saleDate)}
         </h6>
         <h5
           className="card-text"
-          data-testid={`${index}-order-total-value`}
-        >{`R$ ${formatPrice(totalPrice)}`}</h5>
+          data-testid={ `${index}-order-total-value` }
+        >
+          {`R$ ${formatPrice(totalPrice)}`}
+        </h5>
       </div>
     </div>
   );
@@ -38,5 +44,5 @@ OrderCard.propTypes = {
     totalPrice: PropTypes.number,
     saleDate: PropTypes.string,
   }).isRequired,
-  index: PropTypes.number,
+  index: PropTypes.number.isRequired,
 };

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import MenuTop from '../components/MenuTop';
 import { getAllClientOrders } from '../services/ordersService';
-import { getFromLocalStorage } from '../utils/saveToLocalStorage';
+import { getUserFromLocalStorage } from '../utils/localStorageFunctions';
 import ListOrdersCards from '../components/ListOrdersCards';
 import Sidebar from '../components/Sidebar';
 
 function ClientOrdersPage() {
   const [orders, setOrders] = useState(null);
-  const user = getFromLocalStorage();
+  const user = getUserFromLocalStorage();
   const lengthValidation = 0;
 
   const token = user ? user.token : '';

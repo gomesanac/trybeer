@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       saleDate: DataTypes.DATE,
       status: DataTypes.STRING,
     },
-    { timestamps: true, createdAt: 'saleDate', updatedAt: false }
+    { timestamps: true, createdAt: 'saleDate', updatedAt: false },
   );
 
   Sale.associate = (models) => {

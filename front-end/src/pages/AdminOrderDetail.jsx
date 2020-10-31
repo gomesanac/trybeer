@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import AdminMenuSideBar from '../components/AdminMenuSideBar';
 import { getOneOrder, updateOrderStatus } from '../services/ordersService';
 import formatPrice from '../utils/formatPrice';
-import { getFromLocalStorage } from '../utils/saveToLocalStorage';
+import { getUserFromLocalStorage } from '../utils/localStorageFunctions';
 
-function ClientOrderDetail({ match }) {
+function AdminOrderDetail({ match }) {
   const [order, setOrder] = useState(null);
-  const user = getFromLocalStorage();
+  const user = getUserFromLocalStorage();
 
   const token = user ? user.token : '';
   const { id } = match.params;
 
-  const alterStatus = async (id) => {
-    const resp = await updateOrderStatus(id, token);
+  const alterStatus = async (orderId) => {
+    const resp = await updateOrderStatus(orderId, token);
     setOrder(resp);
   };
 
-  const fetchOrder = async (id, token) =>
-    getOneOrder(id, token).then((order) => setOrder(order.sale));
+  const fetchOrder = async (orderId, userToken) => {
+    getOneOrder(orderId, userToken).then((selectOrder) => setOrder(selectOrder.sale));
+  };
 
   useEffect(() => {
     fetchOrder(id, token);
@@ -33,43 +35,54 @@ function ClientOrderDetail({ match }) {
           <div className="card checkout-card">
             <div className="card-header">
               <h1 data-testid="order-number">
-                Pedido {order.saleID ? order.saleID : ''}
+                Pedido
+                {' '}
+                {order.saleID ? order.saleID : ''}
                 <span data-testid="order-status">
                   {' '}
-                  - {order.status ? order.status : ''}
+                  -
+                  {' '}
+                  {order.status ? order.status : ''}
                 </span>
               </h1>
             </div>
             <ul className="list-group list-group-flush">
-              {order.products &&
-                order.products.map(
+              {order.products
+                && order.products.map(
                   (
-                    { soldProductID, soldQuantity, productName, productPrice },
-                    index
+                    {
+                      soldProductID, soldQuantity, productName, productPrice,
+                    },
+                    index,
                   ) => (
-                    <li className="list-group-item" key={soldProductID}>
+                    <li className="list-group-item" key={ soldProductID }>
                       <div>
                         <div>
-                          <span>Quantidade: </span>{' '}
-                          <span data-testid={`${index}-product-qtd`}>
+                          <span>Quantidade: </span>
+                          {' '}
+                          <span data-testid={ `${index}-product-qtd` }>
                             {soldQuantity}
                           </span>
                         </div>
-                        <h3 data-testid={`${index}-product-name`}>
+                        <h3 data-testid={ `${index}-product-name` }>
                           {productName}
                         </h3>
-                        <h3 data-testid={`${index}-order-unit-price`}>
-                          (R$ {productPrice.toFixed(2).replace('.', ',')})
+                        <h3 data-testid={ `${index}-order-unit-price` }>
+                          (R$
+                          {' '}
+                          {productPrice.toFixed(2).replace('.', ',')}
+                          )
                         </h3>
-                        <h6 data-testid={`${index}-product-total-value`}>
-                          R${' '}
+                        <h6 data-testid={ `${index}-product-total-value` }>
+                          R$
+                          {' '}
                           {(productPrice * soldQuantity)
                             .toFixed(2)
                             .replace('.', ',')}
                         </h6>
                       </div>
                     </li>
-                  )
+                  ),
                 )}
             </ul>
             <div className="card-footer">
@@ -81,7 +94,8 @@ function ClientOrderDetail({ match }) {
             </div>
             {order.status === 'Pendente' ? (
               <button
-                onClick={() => alterStatus(id)}
+                type="button"
+                onClick={ () => alterStatus(id) }
                 data-testid="mark-as-delivered-btn"
                 className="btn btn-lg delivery-button"
               >
@@ -101,4 +115,12 @@ function ClientOrderDetail({ match }) {
   );
 }
 
-export default ClientOrderDetail;
+export default AdminOrderDetail;
+
+AdminOrderDetail.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
+  }).isRequired,
+};

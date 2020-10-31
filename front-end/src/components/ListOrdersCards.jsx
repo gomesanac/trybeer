@@ -4,9 +4,9 @@ import OrderCard from './OrderCard';
 
 function ListOrdersCards({ orders }) {
   return (
-    <div id="wrapper" className="product-page orders-list" style={{display: "flex", flexDirection: "row"}}>
+    <div id="wrapper" className="product-page orders-list" style={ { display: 'flex', flexDirection: 'row' } }>
       {orders.map((order, index) => (
-        <OrderCard order={order} index={index} key={order.id} />
+        <OrderCard order={ order } index={ index } key={ order.id } />
       ))}
     </div>
   );
@@ -20,6 +20,6 @@ ListOrdersCards.propTypes = {
       id: PropTypes.number,
       totalPrice: PropTypes.number,
       saleDate: PropTypes.string,
-    })
+    }),
   ).isRequired,
 };
