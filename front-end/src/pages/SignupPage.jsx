@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import { saveToLocalStorage } from '../utils/saveToLocalStorage';
+import { saveToLocalStorage } from '../utils/localStorageFunctions';
 import { register } from '../services/userService';
 
 function SignupPage() {
@@ -37,7 +37,7 @@ function SignupPage() {
   function handleEmailChange(currentEmail) {
     // Fonte do regex : https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
     const regex = new RegExp(
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
     );
     let able = false;
     if (regex.test(currentEmail)) {
@@ -71,13 +71,13 @@ function SignupPage() {
     else setRedirectTo(page);
   }
 
-  if (redirectTo !== '/') return <Redirect to={redirectTo} />;
+  if (redirectTo !== '/') return <Redirect to={ redirectTo } />;
 
   return (
     <div className="main-page card">
       <h1 className="text-center">Trybeer - Signup</h1>
       <div className="d-flex justify-content-center align-items-center">
-        <form method="POST" onSubmit={handleSubmit}>
+        <form method="POST" onSubmit={ handleSubmit }>
           <div className="form-group">
             <label htmlFor="name">
               Nome
@@ -88,8 +88,8 @@ function SignupPage() {
                 name="name"
                 id="name"
                 placeholder="Nome"
-                onChange={(e) => handleNameChange(e.target.value)}
-                value={name.text}
+                onChange={ (e) => handleNameChange(e.target.value) }
+                value={ name.text }
                 required
               />
             </label>
@@ -104,8 +104,8 @@ function SignupPage() {
                 name="email"
                 id="email"
                 placeholder="E-mail válido"
-                onChange={(e) => handleEmailChange(e.target.value)}
-                value={email.text}
+                onChange={ (e) => handleEmailChange(e.target.value) }
+                value={ email.text }
                 required
               />
             </label>
@@ -120,8 +120,8 @@ function SignupPage() {
                 name="password"
                 id="password"
                 placeholder="Escolha uma senha"
-                onChange={(e) => handlePasswordChange(e.target.value)}
-                value={password.text}
+                onChange={ (e) => handlePasswordChange(e.target.value) }
+                value={ password.text }
                 required
               />
             </label>
@@ -134,8 +134,8 @@ function SignupPage() {
                 type="checkbox"
                 name="seller"
                 id="seller"
-                onChange={(e) => setSeller(e.target.checked)}
-                value={seller}
+                onChange={ (e) => setSeller(e.target.checked) }
+                value={ seller }
               />
               Quero Vender
             </label>
@@ -143,7 +143,7 @@ function SignupPage() {
           <input
             type="submit"
             value="Cadastrar"
-            disabled={!ableToSubmit}
+            disabled={ !ableToSubmit }
             data-testid="signup-btn"
             className="btn form-button"
           />

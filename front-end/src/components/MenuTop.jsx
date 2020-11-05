@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 function MenuTop({ pageTitle }) {
   return (
     <div className="MenuTop">
-      <header className="navbar navbar-dark fixed-top" style={{background: "#D17A22"}}>
+      <header className="navbar navbar-dark fixed-top" style={ { background: '#D17A22' } }>
         <div className="container-fluid">
           <button
             id="menuTopToggle"
@@ -19,7 +19,7 @@ function MenuTop({ pageTitle }) {
           >
             <span className="navbar-toggler-icon" />
           </button>
-          <h1 data-testid="top-title" style={{color: "white"}}>{ pageTitle }</h1>
+          <h1 data-testid="top-title" style={ { color: 'white' } }>{ pageTitle }</h1>
         </div>
       </header>
     </div>

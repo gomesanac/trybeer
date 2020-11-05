@@ -14,7 +14,6 @@ const {
   updateOrderStatus,
 } = require('./controllers');
 const { validateJWT } = require('./middlewares');
-const { connection } = require('./models/connection');
 
 const PORT = process.env.API_PORT || 3001;
 
@@ -32,7 +31,7 @@ app.post('/register', registerUser);
 
 app.put('/update-client-name', validateJWT, updateClientName);
 
-app.get('/products', validateJWT, getAllProducts);
+app.get('/products', getAllProducts);
 
 app.post('/checkout', validateJWT, registerSale);
 
@@ -45,7 +44,3 @@ app.put('/orders/:id', validateJWT, updateOrderStatus);
 app.get('/search/:id', validateJWT, getOneOrder);
 
 app.listen(PORT, () => console.log(`Listen on ${PORT}`));
-
-connection().then(() => console.log(
-  `Banco conectado via: ${process.env.MYSQL_USER}@${process.env.HOSTNAME};`,
-));

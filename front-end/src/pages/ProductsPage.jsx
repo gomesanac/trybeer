@@ -6,20 +6,19 @@ import getAllProducts from '../services/productsService';
 import formatPrice from '../utils/formatPrice';
 import {
   getCartFromLocalStorage,
-  getFromLocalStorage,
-} from '../utils/saveToLocalStorage';
-import Sidebar from '../components/Sidebar.jsx';
+  getUserFromLocalStorage,
+} from '../utils/localStorageFunctions';
+import Sidebar from '../components/Sidebar';
 
 function ProductsPage() {
   const [products, setProducts] = useState(null);
   const [totalPrice, setTotalPrice] = useState('0,00');
   const [successMessage, setSuccessMessage] = useState('');
-  const user = getFromLocalStorage();
+  const user = getUserFromLocalStorage();
   const token = user ? user.token : '';
   const lengthValidation = 0;
 
-  const fetchAllProducts = async () =>
-    getAllProducts(token).then((result) => setProducts(result));
+  const fetchAllProducts = async () => getAllProducts(token).then((result) => setProducts(result));
 
   const getTotalPrice = () => {
     const cart = getCartFromLocalStorage();
@@ -27,7 +26,7 @@ function ProductsPage() {
     if (cart && cart.length > lengthValidation) {
       const total = cart.reduce(
         (acc, { price, amount }) => (acc += price * amount),
-        lengthValidation
+        lengthValidation,
       );
       const price = formatPrice(total);
       return setTotalPrice(price);
@@ -60,9 +59,9 @@ function ProductsPage() {
           {products && products.length > lengthValidation ? (
             <div id="wrapper" className="product-page">
               <ListProductsCards
-                products={products}
-                getTotalPrice={getTotalPrice}
-                totalPrice={totalPrice} 
+                products={ products }
+                getTotalPrice={ getTotalPrice }
+                totalPrice={ totalPrice }
               />
             </div>
           ) : (

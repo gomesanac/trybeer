@@ -1,8 +1,8 @@
-const { usersModel } = require('../models');
+const { Users } = require('../models');
 const { generateJWT } = require('../middlewares');
 
 const userLogin = async (email, pass) => {
-  const user = await usersModel.getUserByEmail(email);
+  const user = await Users.findOne({ where: { email }, raw: true });
 
   if (!user || user.password !== pass) {
     return {
@@ -13,6 +13,7 @@ const userLogin = async (email, pass) => {
   const { password, ...userData } = user;
 
   const { token } = generateJWT(userData);
+
   return {
     id: user.id,
     name: user.name,
@@ -22,9 +23,9 @@ const userLogin = async (email, pass) => {
   };
 };
 
-const registerUser = async (name, email, password, role) => {
+const registerUser = async (name, email, password, role = 'client') => {
   try {
-    await usersModel.registerUser(name, email, password, role);
+    await Users.create({ name, email, password, role });
 
     return userLogin(email, password);
   } catch (err) {
@@ -42,7 +43,33 @@ const registerUser = async (name, email, password, role) => {
   }
 };
 
+const updateClientName = async (name, email) => {
+  try {
+    await Users.update({ name, email }, { where:  { email } });
+
+    const user = await Users.findOne({ where: { email } });
+
+    const { password, ...userData } = user;
+
+    const { token } = generateJWT(userData);
+
+    return {
+      name: user.name,
+      email: user.email,
+      token,
+      role: user.role,
+    };
+  } catch (err) {
+    const { info } = err;
+
+    return {
+      err: { code: info.code, message: info.msg },
+    };
+  }
+};
+
 module.exports = {
+  updateClientName,
   userLogin,
   registerUser,
 };

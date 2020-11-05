@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useForm from '../hooks/useForm';
-import { saveToLocalStorage } from '../utils/saveToLocalStorage';
+import { saveToLocalStorage } from '../utils/localStorageFunctions';
 import { login } from '../services/userService';
 
 export default function Login() {
@@ -51,33 +51,36 @@ export default function Login() {
       <div className="d-flex justify-content-center align-items-center">
         <form>
           <div className="mb-3">
-            <label className="form-label">Email:</label>
-            <input
-              type="email"
-              data-testid="email-input"
-              value={values.email}
-              className="form-control"
-              id="email"
-              name="email"
-              onChange={(event) => handleChange(event)}
-            />
+            <label htmlFor="email" className="form-label">
+              Email:
+              <input
+                type="email"
+                data-testid="email-input"
+                value={ values.email }
+                className="form-control"
+                id="email"
+                name="email"
+                onChange={ (event) => handleChange(event) }
+              />
+            </label>
           </div>
           <div className="mb-3">
             <label
-              value={values.password}
+              value={ values.password }
               className="form-label"
               name="password"
+              htmlFor="password"
             >
               Password:
+              <input
+                data-testid="password-input"
+                type="password"
+                className="form-control"
+                id="password"
+                name="password"
+                onChange={ (event) => handleChange(event) }
+              />
             </label>
-            <input
-              data-testid="password-input"
-              type="password"
-              className="form-control"
-              id="password"
-              name="password"
-              onChange={(event) => handleChange(event)}
-            />
           </div>
           <div className="btn-group" role="group">
             <div className="mb-3 mr-2">
@@ -85,15 +88,15 @@ export default function Login() {
                 data-testid="signin-btn"
                 type="submit"
                 className="btn form-button"
-                disabled={!isValid}
-                onClick={(event) => handleSignInSubmit(event)}
+                disabled={ !isValid }
+                onClick={ (event) => handleSignInSubmit(event) }
               >
                 ENTRAR
               </button>
             </div>
             <div className="mb-3">
               <button
-                onClick={(event) => handleNoAccountSubmit(event)}
+                onClick={ (event) => handleNoAccountSubmit(event) }
                 type="submit"
                 data-testid="no-account-btn"
                 className="btn form-button"

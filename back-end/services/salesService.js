@@ -1,4 +1,4 @@
-const { salesModel } = require('../models');
+const { Sales, SalesProducts, Products } = require('../models');
 
 const registerSale = async (
   userId,
@@ -10,16 +10,18 @@ const registerSale = async (
 ) => {
   const { address, number } = delivery;
 
-  const sale = await salesModel.registerSale(
-    userId,
-    totalPrice,
-    address,
-    number,
-    saleDate,
-    status,
+  const sale = await Sales.create(
+    {
+      userId,
+      totalPrice,
+      deliveryAddress: address,
+      deliveryNumber: number,
+      saleDate,
+      status,
+    }
   );
 
-  const saleId = sale.getAutoIncrementValue();
+  const saleId = sale.dataValues.id;
 
   if (!sale) {
     return {
@@ -31,45 +33,38 @@ const registerSale = async (
   }
 
   await Promise.all(
-    products.map(({ id, amount }) => salesModel.registerProductSold(saleId, id, amount)),
+    products.map(({ id, amount }) => SalesProducts.create({ saleId, productId: id, quantity: amount })),
   );
 
   return { message: 'Compra realizada com sucesso!' };
 };
 
-const salesDetailsById = async (saleID) => {
+const salesDetailsById = async (saleId) => {
   try {
-    const sales = await salesModel.getSalesDetailsByID(saleID);
-    const salesData = sales.length ? { saleID: sales[0].saleID,
-      userID: sales[0].userID,
-      orderValue: sales[0].orderValue,
-      deliveryAddress: sales[0].deliveryAddress,
-      deliveryNumber: sales[0].deliveryNumber,
-      saleDate: sales[0].saleDate,
-      status: sales[0].status,
-      products: sales.map(({ soldProductID,
-        soldQuantity,
-        productName,
-        productPrice,
-        productImage }) => ({
-        soldProductID,
-        soldQuantity,
-        productName,
-        productPrice,
-        productImage,
-      })) } : {};
-
-    return { ...salesData };
+    const sales = await Sales.findAll(
+      { 
+        where: { id: saleId },
+        include: [
+        { 
+          model: Products, 
+          as: 'products',
+          through: { attributes: [] },
+       },
+      ],
+        raw: true,
+      }
+    );
+    return sales;
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
-const getAllOrders = async () => salesModel.getAllOrders();
+const getAllOrders = async () => Sales.findAll();
 
-const getAllClientOrders = async (id) => salesModel.getAllClientOrders(id);
+const getAllClientOrders = async (userId) => Sales.findAll({ where: { userId }, raw:true });
 
-const updateOrderStatus = async (id) => salesModel.updateOrderStatus(id);
+const updateOrderStatus = async (id) => Sales.update({status: 'Entregue'}, { where: { id }});
 
 module.exports = {
   registerSale,

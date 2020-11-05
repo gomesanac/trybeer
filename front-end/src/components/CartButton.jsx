@@ -3,16 +3,20 @@ import PropTypes from 'prop-types';
 
 function CartButton({ totalPrice }) {
   return (
-    <div id="cartButton" className="fixed-bottom cart-content" style={{background: "transparent"}}>
+    <div
+      id="cartButton"
+      className="fixed-bottom cart-content"
+      style={ { background: 'transparent' } }
+    >
       <a href="/checkout">
         <button
           type="button"
           className="btn cart-button"
           data-testid="checkout-bottom-btn"
-          disabled={totalPrice === '0,00'}
+          disabled={ totalPrice === '0,00' }
         >
-          Ver Carrinho{' '}
-          <span data-testid="checkout-bottom-btn-value">{`R$ ${totalPrice}`}</span>
+          Ver Carrinho
+          <span data-testid="checkout-bottom-btn-value">{` R$ ${totalPrice}`}</span>
         </button>
       </a>
     </div>

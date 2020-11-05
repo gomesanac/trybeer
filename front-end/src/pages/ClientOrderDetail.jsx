@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import MenuTop from '../components/MenuTop';
 import { getOneOrder } from '../services/ordersService';
 import formatDate from '../utils/formatDate';
 import formatPrice from '../utils/formatPrice';
-import { getFromLocalStorage } from '../utils/saveToLocalStorage';
-import Sidebar from '../components/Sidebar.jsx';
+import { getUserFromLocalStorage } from '../utils/localStorageFunctions';
+import Sidebar from '../components/Sidebar';
 
 function ClientOrderDetail({ match }) {
   const [order, setOrder] = useState(null);
-  const user = getFromLocalStorage();
+  const user = getUserFromLocalStorage();
 
   const token = user ? user.token : '';
   const { id } = match.params;
 
-  const fetchOrder = async (id, token) =>
-    getOneOrder(id, token).then((order) => setOrder(order.sale));
+  const fetchOrder = async (orderId, UserToken) => {
+    getOneOrder(orderId, UserToken).then((selectOrder) => setOrder(selectOrder.sale));
+  };
 
   useEffect(() => {
     fetchOrder(id, token);
@@ -28,44 +30,44 @@ function ClientOrderDetail({ match }) {
       <MenuTop pageTitle="Detalhes de Pedido" />
       <Sidebar />
       <div id="wrapper" className="order-details-page container">
-        {order && order.products ? (
+        {order ? (
           <div className="card">
             <div className="card-header">
               <h3
                 className="card-text"
                 data-testid="order-number"
-              >{`Pedido ${order.saleID}`}</h3>
+              >{`Pedido ${order && order[0].id}`}</h3>
               <p className="card-text" data-testid="order-date">
-                {formatDate(order.saleDate)}
+                {formatDate(order && order[0].saleDate)}
               </p>
             </div>
             <ul className="list-group list-group-flush">
-              {order.products && order.products.map(
+              {order && order.map(
                 (
-                  { soldProductID, soldQuantity, productName, productPrice },
+                  el,
                   index
                 ) => (
-                  <li className="list-group-item" key={soldProductID}>
+                  <li className="list-group-item" key={el["products.id"]}>
                     <div>
                       <h4 data-testid={`${index}-product-name`}>
-                        {productName}
+                        {el["products.name"]}
                       </h4>
                       <p
                         data-testid={`${index}-product-qtd`}
-                      >{`Quantidade: ${soldQuantity}`}</p>
+                      >{`Quantidade: ${0}`}</p>
                       <p data-testid={`${index}-product-total-value`}>
                         {`Total do produto: R$ ${formatPrice(
-                          productPrice * soldQuantity
+                          el["products.price"] * 1
                         )}`}
                       </p>
                     </div>
                   </li>
-                )
+                ),
               )}
             </ul>
             <div className="card-footer">
               <h3 className="card-text" data-testid="order-total-value">
-                {`Total: R$ ${order.orderValue ? formatPrice(order.orderValue): '0,00'}`}
+                {`Total: R$ ${order ? formatPrice(order[0].totalPrice): '0,00'}`}
               </h3>
             </div>
           </div>
@@ -78,3 +80,11 @@ function ClientOrderDetail({ match }) {
 }
 
 export default ClientOrderDetail;
+
+ClientOrderDetail.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
+  }).isRequired,
+};

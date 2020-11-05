@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import MenuTop from '../components/MenuTop';
 import Sidebar from '../components/Sidebar';
 import {
-  getFromLocalStorage,
+  getUserFromLocalStorage,
   saveToLocalStorage,
-} from '../utils/saveToLocalStorage';
+} from '../utils/localStorageFunctions';
 import useForm from '../hooks/useForm';
 import { changeClientName } from '../services/userService';
 
@@ -14,14 +14,14 @@ const ProfilePage = () => {
   const [msg, setMsg] = useState('');
 
   useEffect(() => {
-    setUser(getFromLocalStorage());
+    setUser(getUserFromLocalStorage());
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await changeClientName(
       { name: values.name, email: user.email },
-      user.token
+      user.token,
     );
     saveToLocalStorage(res);
     setMsg('Atualização concluída com sucesso');
@@ -35,36 +35,40 @@ const ProfilePage = () => {
         <form>
           <fieldset aria-label="Disabled fieldset example">
             <div className="mb-3">
-              <label className="form-label">Nome:</label>
-              <input
-                data-testid="profile-name-input"
-                type="text"
-                id="name"
-                name="name"
-                className="form-control"
-                placeholder={user.name}
-                onChange={(event) => handleChange(event)}
-              />
+              <label htmlFor="name" className="form-label">
+                Nome:
+                <input
+                  data-testid="profile-name-input"
+                  type="text"
+                  id="name"
+                  name="name"
+                  className="form-control"
+                  placeholder={ user.name }
+                  onChange={ (event) => handleChange(event) }
+                />
+              </label>
             </div>
             <div className="mb-3">
-              <label className="form-label">Email:</label>
-              <input
-                data-testid="profile-email-input"
-                type="email"
-                id="email"
-                name="email"
-                className="form-control"
-                value={values.email}
-                placeholder={user.email}
-                readOnly
-              />
+              <label htmlFor="email" className="form-label">
+                Email:
+                <input
+                  data-testid="profile-email-input"
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="form-control"
+                  value={ values.email }
+                  placeholder={ user.email }
+                  readOnly
+                />
+              </label>
             </div>
             <button
               type="submit"
               className="btn btn-custom"
-              onClick={(e) => handleSubmit(e)}
+              onClick={ (e) => handleSubmit(e) }
               data-testid="profile-save-btn"
-              disabled={!values.name}
+              disabled={ !values.name }
             >
               Salvar
             </button>
